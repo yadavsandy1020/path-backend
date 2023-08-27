@@ -1,8 +1,11 @@
 // create cbc controller to save cbc details
-const db = require("../../db");
+const db = require("../db");
 
 //pagination import from util
 const { paginateQuery } = require("./util");
+
+// import mongoose
+const mongoose = require("mongoose");
 
 const Cbc = db.cbc;
 
@@ -14,6 +17,8 @@ exports.createCbc = async (req, res) => {
       message: "Patient id can not be empty!",
     });
   }
+  // Connect to MongoDB
+  await mongoose.connect(db.url);
 
   // Create a Cbc
   const cbc = new Cbc({
@@ -38,7 +43,7 @@ exports.createCbc = async (req, res) => {
   // Save Cbc in the database async
   try {
     const insertResult = await cbc.save();
-    console.log(insertResult);
+    mongoose.connection.close();
     return insertResult;
   } catch (err) {
     console.log(err);
@@ -56,6 +61,8 @@ exports.updateCbc = async (req, res) => {
   }
   // get cbc by id and update it async await
   try {
+    // Connect to MongoDB
+    await mongoose.connect(db.url);
     const cbc = await Cbc.findByIdAndUpdate(
       req.params.id,
       {
@@ -77,6 +84,7 @@ exports.updateCbc = async (req, res) => {
       },
       { new: true }
     );
+    await mongoose.connection.close();
     return cbc;
   } catch (err) {
     console.log(err);
@@ -100,11 +108,14 @@ exports.deleteByIdCbc = async (req, res) => {
 
 exports.findAllCbc = async (req, res) => {
   try {
+    // Connect to MongoDB
+    await mongoose.connect(db.url);
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const query = {};
     const populate = ["patient_id", "doctor_id"];
     const cbcs = await paginateQuery(Cbc, query, page, limit, populate);
+    await mongoose.connection.close();
     return cbcs;
   } catch (err) {
     console.log(err);
@@ -139,6 +150,8 @@ exports.findByPatientIdCbc = async (req, res) => {
 // find cbc by patient id or doctor id or cbc id and inculde patient and doctor collections data async await
 exports.findByDoctorIdPatientIdCbcId = async (req, res) => {
   try {
+    // Connect to MongoDB
+    await mongoose.connect(db.url);
     const query = {
       $or: [
         { _id: req.params.id },
@@ -148,6 +161,7 @@ exports.findByDoctorIdPatientIdCbcId = async (req, res) => {
     };
     const populate = ["patient_id", "doctor_id"];
     const data = await paginateQuery(Cbc, query, req.params.page, 10, populate);
+    await mongoose.connection.close();
     return data;
   } catch (err) {
     console.log(err);

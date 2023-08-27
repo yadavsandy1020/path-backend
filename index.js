@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 
-const router = require("./src/routes/path");
+const router = require("./src/routes");
 
 const env = require("dotenv");
 env.config();
@@ -20,18 +20,6 @@ app.use(bodyParser.json()); // parse requests of content-type - application/json
 app.use(bodyParser.urlencoded({ extended: true })); // parse requests of content-type - application/x-www-form-urlencoded
 // app.use("/api", router);
 app.use(`/api/pathlogy`, router);
-
-// connect to mongodb  database
-const db = require("./src/db");
-db.mongoose
-  .connect(db.url, {})
-  .then(() => {
-    console.log("Connected to the database!");
-  })
-  .catch((err) => {
-    console.log("Cannot connect to the database!", err);
-    process.exit();
-  });
 
 // set port, listen for requests
 // app.listen(port, () => {
