@@ -4,8 +4,7 @@
   "description": "samrath path node js backend",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "npm test"
+    "start": "node ./src/index.js"
   },
   "keywords": [
     "path"

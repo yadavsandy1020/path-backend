@@ -1,5 +1,5 @@
 // create cbc controller to save cbc details
-const db = require("../db");
+const db = require("../../db");
 
 //pagination import from util
 const { paginateQuery } = require("./util");

@@ -1,5 +1,5 @@
 // create doctor controller
-const db = require("../db");
+const db = require("../../db");
 
 const Doctor = db.doctors;
 
