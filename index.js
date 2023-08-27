@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // create api code to get users list using express js
 const express = require("express");
 const app = express();
@@ -22,8 +23,11 @@ app.use(bodyParser.urlencoded({ extended: true })); // parse requests of content
 app.use(`/api/pathlogy`, router);
 
 // set port, listen for requests
-// app.listen(port, () => {
-//   console.log(`Server is running on port ${port}.`);
-// });
+
+if (process.env.NODE_ENV !== "development") {
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}.`);
+  });
+}
 
 module.exports = app;

@@ -41,6 +41,8 @@ exports.update = async (req, res) => {
   }
   // get doctor by id and update it async await
   try {
+    // connect to mongodb
+    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
     const doctor = await Doctor.findByIdAndUpdate(
       req.params.id,
       {
@@ -50,6 +52,7 @@ exports.update = async (req, res) => {
       },
       { new: true }
     );
+    await mongoose.connection.close();
     return doctor;
   } catch (err) {
     console.log(err);
@@ -72,7 +75,10 @@ exports.deleteById = async (req, res) => {
 // find all doctor
 exports.findAll = async (req, res) => {
   try {
+    // connect to mongodb
+    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
     const doctors = await Doctor.find();
+    await mongoose.connection.close();
     return doctors;
   } catch (err) {
     console.log(err);
@@ -83,7 +89,10 @@ exports.findAll = async (req, res) => {
 // find doctor by id
 exports.findById = async (req, res) => {
   try {
+    // connect to mongodb
+    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
     const doctor = await Doctor.findById(req.params.id);
+    await mongoose.connection.close();
     return doctor;
   } catch (err) {
     console.log(err);

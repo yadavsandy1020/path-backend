@@ -20,7 +20,7 @@ exports.createCbc = async (req, res) => {
     });
   }
   // Connect to MongoDB
-  await mongoose.connect(db.url);
+  await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
 
   // Create a Cbc
   const cbc = new Cbc({
@@ -45,7 +45,7 @@ exports.createCbc = async (req, res) => {
   // Save Cbc in the database async
   try {
     const insertResult = await cbc.save();
-    mongoose.connection.close();
+    await mongoose.connection.close();
     return insertResult;
   } catch (err) {
     console.log(err);
@@ -64,7 +64,7 @@ exports.updateCbc = async (req, res) => {
   // get cbc by id and update it async await
   try {
     // Connect to MongoDB
-    await mongoose.connect(db.url);
+    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
     const cbc = await Cbc.findByIdAndUpdate(
       req.params.id,
       {
@@ -110,7 +110,7 @@ exports.deleteByIdCbc = async (req, res) => {
 exports.findAllCbc = async (req, res) => {
   try {
     // Connect to MongoDB
-    await mongoose.connect(db.url);
+    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const query = {};
@@ -152,7 +152,7 @@ exports.findByPatientIdCbc = async (req, res) => {
 exports.findByDoctorIdPatientIdCbcId = async (req, res) => {
   try {
     // Connect to MongoDB
-    await mongoose.connect(db.url);
+    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
     const query = {
       $or: [
         { _id: req.params.id },
