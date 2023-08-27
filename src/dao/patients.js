@@ -7,6 +7,9 @@ const { paginateQuery } = require("./util");
 
 const Patient = db.patients;
 
+// import mongoose
+const mongoose = require("mongoose");
+
 // Create and Save a new Patient
 exports.createPatient = async (req, res) => {
   // Validate request

@@ -5,6 +5,9 @@ const db = require("../db");
 
 const Doctor = db.doctors;
 
+// import mongoose
+const mongoose = require("mongoose");
+
 // Create and Save a new Doctor
 exports.create = async (req, res) => {
   // Validate request

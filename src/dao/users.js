@@ -5,6 +5,9 @@ const db = require("../db");
 
 const User = db.users;
 
+// import mongoose
+const mongoose = require("mongoose");
+
 // Create and Save a new User
 exports.createUser = async (req, res) => {
   // Validate request
