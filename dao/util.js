@@ -1,0 +1,32 @@
+exports.paginateQuery = async (
+  model,
+  query,
+  page = 1,
+  pageSize = 10,
+  populateOptions = []
+) => {
+  try {
+    const totalCount = await model.countDocuments(query);
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    const skip = (page - 1) * pageSize;
+
+    let queryWithPopulate = model.find(query);
+
+    for (const populateOption of populateOptions) {
+      queryWithPopulate = queryWithPopulate.populate(populateOption);
+    }
+
+    const results = await queryWithPopulate.skip(skip).limit(pageSize);
+
+    return {
+      data: results,
+      currentPage: page,
+      pageSize: pageSize,
+      totalPages: totalPages,
+      totalCount: totalCount,
+    };
+  } catch (err) {
+    throw err;
+  }
+};
