@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 // create doctor controller
-const db = require("../../db");
+const db = require("../db");
 
 const Doctor = db.doctors;
 

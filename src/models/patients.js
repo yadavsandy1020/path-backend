@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // create model for patients details with name, phone, address and doctor_id
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;

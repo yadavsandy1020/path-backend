@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // create user model
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;

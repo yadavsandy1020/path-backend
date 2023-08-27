@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 // create cbc controller to save cbc details
 const db = require("../db");
 
@@ -71,7 +73,6 @@ exports.updateCbc = async (req, res) => {
         platelets: req.body.platelets,
         wbc: req.body.wbc,
         rbc: req.body.rbc,
-        haemoglobin: req.body.haemoglobin,
         haemoglobin: req.body.haemoglobin,
         eosnophils: req.body.eosnophils,
         lymphocytes: req.body.lymphocytes,
