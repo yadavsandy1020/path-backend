@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-useless-catch */
 exports.paginateQuery = async (
   model,
   query,

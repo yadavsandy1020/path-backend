@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 // create patient controller
 
-const db = require("../../db");
+const db = require("../db");
 const { paginateQuery } = require("./util");
 
 const Patient = db.patients;
