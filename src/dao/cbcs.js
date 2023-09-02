@@ -44,6 +44,8 @@ exports.createCbc = async (req, res) => {
   }
   // Save Cbc in the database async
   try {
+    // connect to mongodb
+    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
     const insertResult = await cbc.save();
     await mongoose.connection.close();
     return insertResult;
@@ -97,7 +99,9 @@ exports.updateCbc = async (req, res) => {
 exports.deleteByIdCbc = async (req, res) => {
   // get cbc by id and delete it
   try {
+    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
     const cbc = await Cbc.findByIdAndRemove(req.params.id);
+    await mongoose.connection.close();
     return cbc;
   } catch (err) {
     console.log(err);
@@ -126,7 +130,9 @@ exports.findAllCbc = async (req, res) => {
 // find cbc by id async await
 exports.findByIdCbc = async (req, res) => {
   try {
+    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
     const cbc = await Cbc.findById(req.params.id);
+    await mongoose.connection.close();
     return cbc;
   } catch (err) {
     console.log(err);
@@ -138,9 +144,11 @@ exports.findByIdCbc = async (req, res) => {
 
 exports.findByPatientIdCbc = async (req, res) => {
   try {
+    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
     const cbc = await Cbc.find({ patient_id: req.params.id })
       .populate("doctor_id")
       .populate("patient_id");
+    await mongoose.connection.close();
     return cbc;
   } catch (err) {
     console.log(err);

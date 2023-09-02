@@ -44,8 +44,12 @@ exports.createPatient = async (req, res) => {
 // delete patient by id async await
 exports.deleteByIdPatient = async (req, res) => {
   try {
-    const data = await Patient.findByIdAndDelete(req.params.id);
-    return data;
+    // connect to mongodb
+    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
+    // get patient by id and delete it async await
+    const patient = await Patient.findByIdAndRemove(req.params.id);
+    await mongoose.connection.close();
+    return patient;
   } catch (err) {
     console.log(err);
     return err;

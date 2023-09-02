@@ -2,102 +2,136 @@
 /* eslint-disable no-undef */
 // create user controller
 const db = require("../db");
-
-const User = db.users;
-
-// import mongoose
 const mongoose = require("mongoose");
 
-// Create and Save a new User
-exports.createUser = async (req, res) => {
+const User = db.users;
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+//user signup methods using jwt bcrypt and jsonwebtoken use encryption and decrption using async await handle all checks
+exports.signup = async (req, res) => {
   // Validate request
   if (!req.body.name) {
-    throw new Error({
-      message: "User name can not be empty!",
+    return res.status(400).json({
+      error: "Name can not be empty!",
+    });
+  }
+  if (!req.body.email) {
+    return res.status(400).json({
+      error: "Email can not be empty!",
+    });
+  }
+  if (!req.body.password) {
+    return res.status(400).json({
+      error: "Password can not be empty!",
+    });
+  }
+  if (!req.body.role) {
+    return res.status(400).json({
+      error: "Role can not be empty!",
+    });
+  }
+
+  // connect to db
+  await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
+  // check if user exists
+
+  const userFound = await User.findOne({ email: req.body.email });
+  if (userFound) {
+    return res.status(400).json({
+      error: "User already exists!",
     });
   }
 
   // Create a User
   const user = new User({
     name: req.body.name,
-    phone: req.body.phone,
-    address: req.body.address,
     email: req.body.email,
     password: req.body.password,
-    role: req.body.role,
   });
 
-  // Save User in the database async
+  // save user in the database use bcrpt to has pwd and useasync await and handle res statuses
+
   try {
+    // gen salt
+    const salt = await bcrypt.genSalt(10);
+    // hash the password
+    user.password = await bcrypt.hash(user.password, salt);
+    // save user in the database
+    // save user
     const data = await user.save();
-    return data;
+    await mongoose.connection.close();
+    return res.status(200).json({
+      message: "User registered successfully!",
+    });
   } catch (err) {
-    console.log(err);
-    return err;
-  }
-};
-
-// find and update user with the request body
-
-exports.updateUser = async (req, res) => {
-  // Validate Request
-  if (!req.body) {
-    throw new Error({
-      message: "User content can not be empty",
+    return res.status(400).json({
+      error: "Error creating user",
     });
   }
-  // get user by id and update it async await
-  try {
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        name: req.body.name,
-        phone: req.body.phone,
-        address: req.body.address,
-        email: req.body.email,
-        password: req.body.password,
-        role: req.body.role,
-      },
-      { new: true }
-    );
-    return user;
-  } catch (err) {
-    console.log(err);
-    return err;
-  }
 };
 
-// delete user by id async await
-exports.deleteByIdUser = async (req, res) => {
-  try {
-    const data = await User.findByIdAndDelete(req.params.id);
-    return data;
-  } catch (err) {
-    console.log(err);
-    return err;
+// sign in controller jwt generate and match hashed pwd
+exports.signin = async (req, res) => {
+  // Validate request
+  if (!req.body.email) {
+    return res.status(400).json({
+      error: "Email can not be empty!",
+    });
   }
+  if (!req.body.password) {
+    return res.status(400).json({
+      error: "Password can not be empty!",
+    });
+  }
+
+  // connect to db
+  await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
+
+  // check if user exists
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return res.status(400).json({
+      error: "User not found!",
+    });
+  }
+
+  // check if password
+  const match = await bcrypt.compare(req.body.password, user.password);
+  if (!match) {
+    return res.status(400).json({
+      error: "Wrong password!",
+    });
+  }
+  // generate jwt
+  const token = jwt.sign(
+    { id: user._id, name: user.name, email: user.email },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: 86400,
+      algorithm: "HS256",
+      subject: "user",
+    }
+  );
+  await mongoose.connection.close();
+  return res.status(200).json({
+    data: {
+      token: token,
+    },
+  });
 };
 
-// get all users
+// get user list controller
+exports.getUserList = async (req, res) => {
+  // connect to db
+  await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
 
-exports.findAllUsers = async (req, res) => {
-  try {
-    const data = await User.find();
-    return data;
-  } catch (err) {
-    console.log(err);
-    return err;
-  }
-};
+  // get user list except password
+  const users = await User.find({}, "-password");
 
-// get user by id
+  await mongoose.connection.close();
 
-exports.findByIdUser = async (req, res) => {
-  try {
-    const data = await User.findById(req.params.id);
-    return data;
-  } catch (err) {
-    console.log(err);
-    return err;
-  }
+  return res.status(200).json({
+    data: users,
+  });
 };

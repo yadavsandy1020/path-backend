@@ -26,7 +26,10 @@ exports.create = async (req, res) => {
 
   // Save Doctor in the database async
   try {
+    //create connection to mongodb
+    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
     const data = await doctor.save();
+    await mongoose.connection.close();
     return data;
   } catch (err) {
     console.log(err);
@@ -67,7 +70,10 @@ exports.update = async (req, res) => {
 exports.deleteById = async (req, res) => {
   // get doctor by id and delete it
   try {
+    // connect to mongodb
+    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
     const doctor = await Doctor.findByIdAndRemove(req.params.id);
+    await mongoose.connection.close();
     return doctor;
   } catch (err) {
     console.log(err);

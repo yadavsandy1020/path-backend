@@ -58,6 +58,26 @@ router.delete("/doctors/:id", async (req, res) => {
   }
 });
 
+// user signup route
+const { signup, signin } = require("../dao/users");
+router.post("/users/signup", async (req, res) => {
+  try {
+    const user = await signup(req, res);
+    return user;
+  } catch (err) {
+    return err;
+  }
+});
+
+router.post("/users/signin", async (req, res) => {
+  try {
+    const user = await signin(req, res);
+    return user;
+  } catch (err) {
+    return err;
+  }
+});
+
 // cbc routes
 const {
   createCbc,
@@ -191,61 +211,13 @@ router.delete("/patients/:id", async (req, res) => {
   }
 });
 
-const {
-  createUser,
-  updateUser,
-  findAllUsers,
-  findByIdUser,
-  deleteByIdUser,
-} = require("../dao/users");
+const { getUserList } = require("../dao/users");
 
 router.get("/users", async (req, res) => {
   try {
-    const users = await findAllUsers(req, res);
-    res.json(users);
+    return await getUserList(req, res);
   } catch (err) {
-    console.log(err);
-    res.json({ message: err });
-  }
-});
-
-router.post("/users", async (req, res) => {
-  try {
-    const user = await createUser(req, res);
-    res.json(user);
-  } catch (err) {
-    res.json({ message: err });
-  }
-});
-
-// update user by id
-
-router.put("/users/:id", async (req, res) => {
-  try {
-    const user = await updateUser(req, res);
-    res.json(user);
-  } catch (err) {
-    res.json({ message: err });
-  }
-});
-
-// get user by id
-router.get("/users/:id", async (req, res) => {
-  try {
-    const user = await findByIdUser(req, res);
-    res.json(user);
-  } catch (err) {
-    res.json({ message: err });
-  }
-});
-
-// delete user by id
-router.delete("/users/:id", async (req, res) => {
-  try {
-    const user = await deleteByIdUser(req, res);
-    res.json(user);
-  } catch (err) {
-    res.json({ message: err });
+    return await err;
   }
 });
 

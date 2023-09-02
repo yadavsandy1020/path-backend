@@ -2,9 +2,9 @@
   "name": "path-backend",
   "version": "1.0.0",
   "description": "samrath path node js backend",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "DEBUG=* node index.js"
   },
   "keywords": [
     "path"
@@ -12,10 +12,12 @@
   "author": "Sandeep Yadav",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^5.8.1",
     "mongoose": "^7.4.4"
   },

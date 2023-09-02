@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-// create model for patients complete blood count details and add foreign key patient_id to patients table and doctor_id to doctors table    patient_id: platelets wbc,rbc, haemoglobin mcv mchc
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
