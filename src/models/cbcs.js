@@ -65,6 +65,32 @@ const cbcSchema = new Schema(
       type: Number,
       required: false,
     },
+    mp: {
+      type: String,
+      required: false,
+    },
+    esr: {
+      type: Number,
+      required: false,
+    },
+    widal: {
+      styphiO: {
+        type: Number,
+        required: true,
+      },
+      styphiH: {
+        type: Number,
+        required: true,
+      },
+      sParaTyphiAH: {
+        type: Number,
+        required: true,
+      },
+      sParaTyphiBH: {
+        type: Number,
+        required: true,
+      },
+    },
     created_at: {
       type: Date,
       default: Date.now,

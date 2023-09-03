@@ -16,24 +16,34 @@ exports.create = async (req, res) => {
       message: "Doctor name can not be empty!",
     });
   }
-
+  const mobile = req.body.phone.replace("+91", "");
   // Create a Doctor
   const doctor = new Doctor({
     name: req.body.name,
-    phone: req.body.phone,
+    phone: mobile,
     address: req.body.address,
   });
 
-  // Save Doctor in the database async
-  try {
-    //create connection to mongodb
-    await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
-    const data = await doctor.save();
-    await mongoose.connection.close();
-    return data;
-  } catch (err) {
-    console.log(err);
-    return err;
+  // find doctor by mobile number ignore +91 if exist
+  const findDoctor = await Doctor.findOne({ phone: mobile });
+
+  // if exist then throw error else save
+  if (findDoctor) {
+    throw new Error({
+      message: "Doctor already exist!",
+    });
+  } else {
+    // Save Doctor in the database
+    try {
+      //create connection to mongodb
+      await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
+      const data = await doctor.save();
+      await mongoose.connection.close();
+      return data;
+    } catch (err) {
+      console.log(err);
+      return err;
+    }
   }
 };
 

@@ -38,6 +38,9 @@ exports.createCbc = async (req, res) => {
     mcv: req.body.mcv,
     mch: req.body.mch,
     mchc: req.body.mchc,
+    esr: req.body.esr,
+    widal: req.body.widal,
+    mp: req.body.mp,
   });
   if (req.body.doctor_id) {
     cbc.doctor_id = req.body.doctor_id;
@@ -84,6 +87,9 @@ exports.updateCbc = async (req, res) => {
         mch: req.body.mch,
         mchc: req.body.mchc,
         hct: req.body.hct,
+        esr: req.body.esr,
+        widal: req.body.widal,
+        mp: req.body.mp,
       },
       { new: true }
     );
