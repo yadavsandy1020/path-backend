@@ -117,7 +117,12 @@ exports.findAllCbc = async (req, res) => {
     await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const query = {};
+    const query = {
+      // createdAt: {
+      //   $gte: new Date(req.query.from) || new Date(),
+      //   $lte: new Date(req.query.to) || new Date(),
+      // },
+    };
     const populate = ["patient_id", "doctor_id"];
     const cbcs = await paginateQuery(Cbc, query, page, limit, populate);
     await mongoose.connection.close();

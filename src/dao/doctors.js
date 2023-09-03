@@ -49,15 +49,11 @@ exports.update = async (req, res) => {
   try {
     // connect to mongodb
     await mongoose.connect(db.url, { serverSelectionTimeoutMS: 30000 });
-    const doctor = await Doctor.findByIdAndUpdate(
-      req.params.id,
-      {
-        name: req.body.name,
-        phone: req.body.phone,
-        address: req.body.address,
-      },
-      { new: true }
-    );
+    const doctor = await Doctor.findByIdAndUpdate(req.params.id, {
+      name: req.body.name,
+      phone: req.body.phone,
+      address: req.body.address,
+    });
     await mongoose.connection.close();
     return doctor;
   } catch (err) {

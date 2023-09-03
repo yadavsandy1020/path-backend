@@ -13,7 +13,8 @@ exports.paginateQuery = async (
 
     const skip = (page - 1) * pageSize;
 
-    let queryWithPopulate = model.find(query);
+    // sort by latest created
+    let queryWithPopulate = model.find(query).sort({ createdAt: -1 });
 
     for (const populateOption of populateOptions) {
       queryWithPopulate = queryWithPopulate.populate(populateOption);
